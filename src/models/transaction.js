@@ -19,6 +19,9 @@ const TransactionSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  id: {
+    type: Number,
+  }
 });
 
 module.exports = mongoose.model('Transaction', TransactionSchema);

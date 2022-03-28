@@ -4,10 +4,9 @@ const bodyParser = require('body-parser')
 const itemRoutes = require('./routes/item.routes');
 const app = express();
 const mongoose = require('mongoose');
-const axios = require('axios')
-const Transaction = require('./models/transaction.js');
+const Bezos = require('./models/bezos.js');
 
-const bezonsRelatedCompanies = ['Amazon', 'Washington Post', 'Whole Foods', 'Blue Origin']
+const bezosCompanies = ['Amazon', 'Washington Post', 'Whole Foods', 'Blue Origin']
 
 app.use(cors());
 app.options('*', cors());
@@ -30,18 +29,10 @@ mongoose.connection.on('error', (err) => {
   console.error("Error on connecting to mongo\n", err);
 })
 
-axios
-  .get('https://61b3dea5af5ff70017ca20bf.mockapi.io/transactions')
-  .then(({ data }) => {
-    data.map(item => {
-      Object.assign(item, { is_selected: bezonsRelatedCompanies.includes(item.merchant_name) })
-      const newTransaction = new Transaction(item)
-      newTransaction.save()
-    })
-  })
-  .catch(err => {
-    console.log(err)
-  })
+bezosCompanies.map(async item => {
+  const newBezos = new Bezos({ name: item })
+  await newBezos.save()
+})
 
 app.listen(4000, () => {
   console.log("Listening on port 4000 .......");
